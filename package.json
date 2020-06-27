@@ -31,6 +31,15 @@
   "files": [
     "lib/**/*"
   ],
-  "keywords": ["Dialoguewise"],
-  "author": "Dialoguewise"
+  "keywords": [
+    "Dialoguewise"
+  ],
+  "author": "Dialoguewise",
+  "dependencies": {
+    "@types/crypto-js": "^3.1.47",
+    "@types/node-fetch": "^2.5.7",
+    "crypto-js": "^4.0.0",
+    "isomorphic-unfetch": "^3.0.0",
+    "moment": "2.24.0"
+  }
 }
