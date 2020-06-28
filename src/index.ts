@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import * as CryptoJS from 'crypto-js';
 
 export class DialogueWiseService {
@@ -35,8 +34,35 @@ export class DialogueWiseService {
     });
   }
 
+  pad(n: number): string {
+    return n < 10 ? '0' + n : String(n);
+  }
+
+  getCurrentUtc() {
+    const currentTime = new Date();
+    let currentUtc: string = '';
+    currentUtc += this.pad(currentTime.getUTCDate());
+    currentUtc += '/';
+    currentUtc += this.pad(currentTime.getUTCMonth() + 1);
+    currentUtc += '/';
+    currentUtc += this.pad(currentTime.getUTCFullYear());
+    currentUtc += ' ';
+    let currentUtcHour = currentTime.getUTCHours();
+    const currentUtcAMPM: string = currentUtcHour >= 12 ? 'PM' : 'AM';
+    currentUtcHour = currentUtcHour > 12 ? currentUtcHour - 12 : currentUtcHour;
+    currentUtcHour = currentUtcHour === 0 ? 12 : currentUtcHour;
+    currentUtc += this.pad(currentUtcHour);
+    currentUtc += ':';
+    currentUtc += this.pad(currentTime.getUTCMinutes());
+    currentUtc += ':';
+    currentUtc += this.pad(currentTime.getUTCSeconds());
+    currentUtc += ' ';
+    currentUtc += currentUtcAMPM;
+    return currentUtc;
+  }
+
   async getDialogue(request: DialogueWiseRequest) {
-    const currentUtc = moment.utc().format('DD/MM/YYYY hh:mm:ss a');
+    const currentUtc = this.getCurrentUtc();
     // The Pilot flag allows you to get the piloted content. Allows you to test your content.
     const isPilotFlag = request.isPilot != null && request.isPilot ? '&isPilotVersion=true' : '';
     let pageFlag = '';

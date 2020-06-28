@@ -1,6 +1,6 @@
 {
   "name": "dialoguewise",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A lightweight library that allows to easily call the Dialogue Wise Api.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -37,7 +37,6 @@
   "author": "Dialoguewise",
   "dependencies": {
     "@types/crypto-js": "^3.1.47",
-    "crypto-js": "^4.0.0",
-    "moment": "2.24.0"
+    "crypto-js": "^4.0.0"
   }
 }
