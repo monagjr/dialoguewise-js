@@ -1,9 +1,39 @@
-import 'isomorphic-unfetch';
 import * as moment from 'moment';
 import * as CryptoJS from 'crypto-js';
 
 export class DialogueWiseService {
   readonly apiBaseUrl = 'https://api.dialoguewise.com/api/';
+
+  doRequest(options: object, postData: any) {
+    return new Promise((resolve, reject) => {
+      let respJson = null;
+      let https = null;
+      try {
+        https = require('https');
+      } catch (e) {
+        reject(e);
+      }
+
+      const postReq = https.request(options);
+      postReq.on('response', (res: any) => {
+        res.setEncoding('utf8');
+        let body = '';
+        res.on('data', (data: any) => {
+          body += data;
+        });
+        res.on('end', () => {
+          respJson = JSON.parse(body);
+          resolve(respJson);
+        });
+      });
+      postReq.on('error', (err: any) => {
+        reject(err);
+      });
+
+      if (postData) postReq.write(postData);
+      postReq.end();
+    });
+  }
 
   async getDialogue(request: DialogueWiseRequest) {
     const currentUtc = moment.utc().format('DD/MM/YYYY hh:mm:ss a');
@@ -39,13 +69,32 @@ export class DialogueWiseService {
       'Access-Control-Allow-Headers': 'Content-Type, Timestamp, Authentication',
     };
 
-    const response = await fetch(apiUrl, {
-      method: 'post',
-      headers,
-      body: request.variableList ? JSON.stringify(request.variableList) : null,
-    });
-
-    const respJson = await response.json();
+    let respJson = null;
+    const postData = request.variableList ? JSON.stringify(request.variableList) : null;
+    // are we on Browser side or Node side
+    if (typeof process === 'object') {
+      // Node side
+      const myURL = new URL(apiUrl);
+      const postOptions = {
+        host: myURL.hostname,
+        port: '443',
+        path: myURL.pathname + myURL.search,
+        method: 'POST',
+        headers,
+      };
+      respJson = await this.doRequest(postOptions, postData);
+    } else {
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'post',
+          headers,
+          body: postData,
+        });
+        respJson = await response.json();
+      } catch (e) {
+        throw e;
+      }
+    }
     return respJson;
   }
 }
