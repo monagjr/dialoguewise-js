@@ -38,6 +38,12 @@ export class DialogueWiseService {
     return n < 10 ? '0' + n : String(n);
   }
 
+  strMapToObj(strMap: Map<string, any>) {
+    let obj = Object.create(null);
+    strMap.forEach((v, k) => { obj[k] = v });
+    return obj;
+  }
+
   getCurrentUtc() {
     const currentTime = new Date();
     let currentUtc: string = '';
@@ -96,7 +102,7 @@ export class DialogueWiseService {
     };
 
     let respJson = null;
-    const postData = request.variableList ? JSON.stringify(request.variableList) : null;
+    const postData = request.variableList ? JSON.stringify(this.strMapToObj(request.variableList)) : null;
     // are we on Browser side or Node side
     if (typeof process === 'object') {
       // Node side

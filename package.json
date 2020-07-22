@@ -1,6 +1,6 @@
 {
   "name": "dialoguewise",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "A lightweight library that allows to easily call the Dialogue Wise Api.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
